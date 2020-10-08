@@ -21,7 +21,7 @@ if (mysqli_connect_errno()) {
 if (!function_exists('curl_init')) {
     $ServerErrors[] = "PHP CURL is NOT installed on your web server !";
 }
-if (!extension_loaded('gd') && !function_exists('gd_info')) {
+if (extension_loaded('gd') && !function_exists('gd_info')) {
     $ServerErrors[] = "PHP GD library is NOT installed on your web server !";
 }
 if (!extension_loaded('zip')) {
