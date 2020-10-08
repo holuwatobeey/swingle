@@ -230,11 +230,11 @@ if (file_exists('../htaccess.txt')) {
             $mysqli = false;
             $disabled = true;
             }
-            if (!extension_loaded('mbstring')) {
+            if (extension_loaded('mbstring')) {
             $mbstring = false;
             $disabled = true;
             }
-            if (!extension_loaded('gd') && !function_exists('gd_info')) {
+            if (extension_loaded('gd') && function_exists('gd_info')) {
             $gd = false;
             $disabled = true;
             }
