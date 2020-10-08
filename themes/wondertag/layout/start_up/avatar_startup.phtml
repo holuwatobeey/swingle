@@ -1,0 +1,84 @@
+<div class="container">
+	<div class="valign tag_startup">
+		<div class="wow_content p20">
+			<div class="row tag_startup_row">
+				<div class="col-lg-4 col-md-3">
+					<?php if (Wo_IsMobile() == false) { ?>
+					<div class="tag_startup_img">
+						<h2 class="text-center tag_page_title"><?php echo $wo['lang']['add_photo']; ?></h2>
+						<img src="<?php echo $wo['config']['theme_url'];?>/img/start_up/camera.png" alt="<?php echo $wo['lang']['ad_media']; ?>">
+					</div>
+					<?php } ?>
+				</div>
+				<div class="col-lg-8 col-md-9">
+					<ul class="list-unstyled tag_steps">
+						<li class="active"><div><?php echo $wo['lang']['ad_media']; ?></div></li>
+						<li><div><?php echo $wo['lang']['info']; ?></div></li>
+						<li><div><?php echo $wo['lang']['follow']; ?></div></li>
+					</ul>
+					<hr>
+					<div class="wow_usr_steps text-center">
+						<h4><?php echo $wo['lang']['add_photo_des'];?></h4>
+						<div class="upload-image pointer" onclick="document.getElementById('avatar').click(); return false" title="<?php echo $wo['lang']['upload_your_photo'];?>">
+							<div class="user-avatar-uploading-container">
+								<div class="pace-activity-parent"><div class="pace-activity"></div></div>
+							</div>
+							<div class="upload-image-content">
+								<img src="<?php echo $wo['user']['avatar'];?>" alt="<?php echo $wo['lang']['upload_your_photo'];?>">
+							</div>
+							<div class="profile-avatar-changer">
+								<span class="btn btn-mat">
+									<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"></path><circle cx="12" cy="12" r="3"></circle><path d="M20 4h-3.17l-1.24-1.35c-.37-.41-.91-.65-1.47-.65H9.88c-.56 0-1.1.24-1.48.65L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"></path></svg>
+								</span>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+					<div class="valign wow_usr_steps_cont">
+						<small class="skip-step pointer" onclick="Wo_SkipStep('startup_image');"><?php echo $wo['lang']['start_up_skip'];?></small>
+						<button class="btn con-button btn-main btn-mat disable_btn" disabled onclick="Wo_NextStep();"><?php echo $wo['lang']['start_up_continue'];?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<form action="#" method="post" class="profile-avatar-changer hidden">
+    <input type="file" id="avatar" name="avatar" accept="image/x-png, image/jpeg" onchange="Wo_UpdateProfileAvatar();">
+    <input type="hidden" name="user_id" id="user-id" value="<?php echo $wo['user']['user_id'];?>">
+</form>
+
+<script type="text/javascript">
+var user_id = $('#user-id').val();
+$(function () {
+	$('form.profile-avatar-changer').ajaxForm({
+		url: Wo_Ajax_Requests_File() + '?f=update_user_avatar_picture&s=start',
+		beforeSend: function () {
+			$('.user-avatar-uploading-container').fadeIn(200);
+		},
+		success: function (data) {
+			if(data.status == 200) {
+				$('.upload-image-content').html('<img src="' + data.img + '">');
+				$('h2').text(data.big_text);
+				var Title = $('<textarea />').html(data.small_text).text();
+				$('h4').text(Title);
+				$('[id^=updateImage-' + user_id + ']').attr("src", data.img);
+				$('button.disable_btn').attr('disabled', false);
+				$('.skip-step').hide();
+			}
+			$('.user-avatar-uploading-container').fadeOut(200);
+		}
+	});
+});
+function Wo_UpdateProfileAvatar() {
+	$("form.profile-avatar-changer").submit();
+}
+function Wo_NextStep() {
+	$('button.disable_btn').attr('disabled', true);
+	$('button.disable_btn').text("<?php echo $wo['lang']['please_wait'];?>");
+	setTimeout(function() {
+		window.location.href = '<?php echo Wo_SeoLink('index.php?link1=start-up');?>';
+	}, 1000);
+}
+</script>

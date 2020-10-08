@@ -1,0 +1,43 @@
+<div class="lightbox-backgrond" onclick="Wo_CloseLightbox();"></div>
+<div class="lightbox-content wo_image_lightbox">
+	<div class="story-img">
+		<div class="valign tag_lbox_toolbar">
+			<div class="valign">
+				<div class="btn btn-mat close-lightbox" onclick="Wo_CloseLightbox();">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+				</div>
+			</div>
+			<div class="valign">
+				<button type="button" class="btn btn-mat" onclick="window.open('<?php echo $wo['image']['image_org'];?>', '_blank')"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"/></svg></button>
+				<button type="button" class="btn btn-mat" onclick="zoomin(<?php echo $wo['image']['id'];?>)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15zM10 10V7h2v3h3v2h-3v3h-2v-3H7v-2h3z"/></svg></button>
+				<button type="button" class="btn btn-mat" onclick="zoomout(<?php echo $wo['image']['id'];?>)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15zM7 10h8v2H7v-2z"/></svg></button>
+			</div>
+		</div>
+		<div class="tag_lbox_blur_img"><div class="tag_lbox_blur_img_innr"><img src="<?php echo $wo['image']['image_org'];?>"></div></div>
+		<div class="tag_lbox_img_innr">
+			<span class="btn btn-mat changer previous-btn" onclick="Wo_PreviousProductPicture(<?php echo $wo['image']['product_id'];?>, <?php echo $wo['image']['id'];?>);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg></span>
+			<span class="btn btn-mat changer next-btn" onclick="Wo_NextProductPicture(<?php echo $wo['image']['product_id'];?>, <?php echo $wo['image']['id'];?>);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"/></svg></span>
+			<div id="draggableHelper" class="dragable">
+				<img src="<?php echo $wo['image']['image_org'];?>" alt="media" class="" id="wo_zoom_product_<?php echo $wo['image']['id'];?>">
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).keydown(function(e) {
+    if (e.keyCode == 27) {
+        Wo_CloseLightbox();
+    }   
+});
+function zoomin(id){
+	var myImg = document.getElementById("wo_zoom_product_<?php echo $wo['image']['id'];?>");
+	$(myImg).addClass("double_zoom");
+	$('#draggableHelper').draggable({ cursor: "move", revert: true, disabled: false });
+}
+function zoomout(id){
+	var myImg = document.getElementById("wo_zoom_product_<?php echo $wo['image']['id'];?>");
+	$(myImg).removeClass("double_zoom");
+	$('#draggableHelper').draggable({ disabled: true, revert: true });
+}
+</script>

@@ -1,0 +1,19 @@
+<div class="modal fade" id="edit-post" role="dialog">
+	<div class="modal-dialog wow_mat_mdl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title"><?php echo $wo['lang']['edit_post']; ?></h4>
+			</div>
+			<div class="modal-body edit-textarea-<?php echo $wo['story']['id'];?>">
+				<label class="tag_field">
+					<textarea placeholder=" " dir="auto" rows="6" onkeyup="Wo_Get_Mention(this)"><?php echo $wo['story']['Orginaltext']?></textarea>
+					<span><?php echo $wo['lang']['edit_post'] ?></span>
+				</label>
+			</div>
+			<div class="modal-footer" style="border: none">
+				<button type="button" class="btn btn-default btn-mat disable_btn" data-dismiss="modal" aria-label="Close"><?php echo $wo['lang']['cancel'] ?></button>
+				<button type="button" class="btn btn-main btn-mat disable_btn" id="edit-post-button" onclick="Wo_EditPost(<?php echo $wo['story']['id'];?>)" ><?php echo $wo['lang']['update']; ?></button>
+			</div>
+		</div>
+	</div>
+</div>

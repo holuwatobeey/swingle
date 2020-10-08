@@ -1,0 +1,209 @@
+<?php 
+$query = $wo['story']['id'];
+$image = Wo_GetMedia($wo['story']['postFile']);
+if (strpos($wo['story']['postFile'],',') !== false) {
+    $explode = @explode(',', $wo['story']['postFile']);
+    $image = Wo_GetMedia($explode[0]);
+}
+if ($wo['config']['shout_box_system'] == 1 && $wo['story']['postPrivacy'] == 4) {
+      $anonymous = true;
+      $wo['story']['publisher']['username'] = 'anonymous';
+      $wo['story']['publisher']['name'] = $wo['lang']['anonymous'];
+      $wo['story']['publisher']['avatar'] = Wo_GetMedia('upload/photos/incognito.png');
+      $wo['story']['publisher']['verified'] = 0;
+      $wo['story']['publisher']['type'] = '';
+	  $wo['story']['publisher']['url'] = 'javascript:void(0)';
+   }
+?>
+<div class="lightbox-backgrond" onclick="Wo_CloseLightbox();"></div>
+<div class="lightbox-content post wo_imagecombo_lbox lightpost-<?php echo $wo['story']['id'];?>" id="post-<?php echo $wo['story']['id'];?>" data-post-id="<?php echo $wo['story']['id'];?>">
+	<div class="story-img">
+		<div class="valign tag_lbox_toolbar">
+			<div class="valign">
+				<div class="btn btn-mat close-lightbox" onclick="Wo_CloseLightbox();">
+					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M7.828 11H20v2H7.828l5.364 5.364-1.414 1.414L4 12l7.778-7.778 1.414 1.414z"/></svg>
+				</div>
+			</div>
+			<div class="valign">
+				<?php if ($wo['story']['blur'] == 0) { ?>
+					<a class="btn btn-mat" href="<?php echo $image;?>" title="<?php echo $wo['lang']['download'];?>" download><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2zm0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8-8 3.58-8 8 3.58 8 8 8zm1-8h3l-4 4-4-4h3V8h2v4z"/></svg></a>
+					<a class="btn btn-mat" href="<?php echo $image;?>" title="<?php echo $wo['lang']['open_original'];?>" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"/></svg></a>
+					<?php
+						$fileType = strtolower(substr($image, strrpos($image, '.') + 1));
+						if ($wo['loggedin'] && $wo['user']['user_id'] == $wo['story']['publisher']['user_id'] && ( $fileType == 'jpg' || $fileType == 'jpeg' || $fileType == 'png') ){
+					?>
+						<button type="button" class="btn btn-mat" onclick="rotate(<?php echo $wo['story']['id'];?>)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M13.414 6l1.829 1.828-1.415 1.415L9.586 5 13.828.757l1.415 1.415L13.414 4H16a5 5 0 0 1 5 5v4h-2V9a3 3 0 0 0-3-3h-2.586zM15 11v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V11a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1zm-2 1H5v8h8v-8z"/></svg></button>
+					<?php } ?>
+					<button type="button" class="btn btn-mat" onclick="zoomin(<?php echo $wo['story']['id'];?>)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15zM10 10V7h2v3h3v2h-3v3h-2v-3H7v-2h3z"/></svg></button>
+					<button type="button" class="btn btn-mat" onclick="zoomout(<?php echo $wo['story']['id'];?>)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M18.031 16.617l4.283 4.282-1.415 1.415-4.282-4.283A8.96 8.96 0 0 1 11 20c-4.968 0-9-4.032-9-9s4.032-9 9-9 9 4.032 9 9a8.96 8.96 0 0 1-1.969 5.617zm-2.006-.742A6.977 6.977 0 0 0 18 11c0-3.868-3.133-7-7-7-3.868 0-7 3.132-7 7 0 3.867 3.132 7 7 7a6.977 6.977 0 0 0 4.875-1.975l.15-.15zM7 10h8v2H7v-2z"/></svg></button>
+				<?php } ?>
+				<?php
+					$fileType = strtolower(substr($image, strrpos($image, '.') + 1));
+					if ($wo['loggedin'] && $wo['user']['user_id'] == $wo['story']['publisher']['user_id'] && ( $fileType == 'jpg' || $fileType == 'jpeg' || $fileType == 'png') && $wo['story']['multi_image_post']) {
+				?>
+					<button type="button" class="btn btn-mat" onclick="Wo_DeletePost(<?php echo $wo['story']['id'];?>);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-9 3h2v6H9v-6zm4 0h2v6h-2v-6zM9 4v2h6V4H9z"/></svg></button>
+				<?php } ?>
+				<button type="button" class="btn btn-mat btn-toggle-lbox-info" onclick="$('.lightpost-<?php echo $wo['story']['id'];?>').toggleClass('hide_lbox_info');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"/></svg></button>
+			</div>
+		</div>
+		<div class="tag_lbox_blur_img"><div class="tag_lbox_blur_img_innr"><img src="<?php echo $image. "?cache=" . time();?>"></div></div>
+		<div class="tag_lbox_img_innr">
+			<span class="btn btn-mat changer previous-btn" onclick="Wo_PreviousPicture(<?php echo $query;?>);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z"/></svg></span>
+			<span class="btn btn-mat changer next-btn" onclick="Wo_NextPicture(<?php echo $query;?>);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M13.172 12l-4.95-4.95 1.414-1.414L16 12l-6.364 6.364-1.414-1.414z"/></svg></span>
+			<div id="draggableHelper" class="dragable" onclick="$('.lightpost-<?php echo $wo['story']['id'];?>').toggleClass('active');">
+				<?php if ($wo['story']['blur'] == 1) { ?>
+					<button class='btn btn-main btn-mat btn-mat-raised image_blur_btn remover_blur_btn_<?php echo $wo['story']['id']; ?>' onclick='Wo_RemoveBlur(this,<?php echo $wo['story']['id']; ?>)'><?php echo $wo['lang']['view_image']; ?></button>
+					<img src="<?php echo $image. "?cache=" . time();?>" alt="media" class="image_blur remover_blur_<?php echo $wo['story']['id']; ?>" id="wo_zoom_<?php echo $wo['story']['id'];?>"> 
+				<?php } else { ?>
+					<img src="<?php echo $image. "?cache=" . time();?>" alt="media" class="" id="wo_zoom_<?php echo $wo['story']['id'];?>">
+				<?php } ?>
+			</div>
+		</div>
+		<div class="tag_mobi_lbox_foot">
+			<div class="valign tag_lbox_hdr">
+				<div class="avatar">
+					<a href="<?php echo $wo['story']['publisher']['url'];?>"><img src="<?php echo $wo['story']['publisher']['avatar'];?>"></a>
+				</div>
+				<div>
+					<h4>
+						<?php if (!isset($anonymous)) { ?>
+							<a href="<?php echo $wo['story']['publisher']['url'];?>"><?php echo $wo['story']['publisher']['name'];?></a>
+						<?php } else { ?>
+							<?php echo $wo['story']['publisher']['name'];?>
+						<?php } ?>
+					</h4>
+					<span class="ajax-time" title="<?php echo date('c',$wo['story']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['story']['time']); ?></span>
+				</div>
+			</div>
+			<p class="bold pointer tag_mobi_lbox_foot_com_count" onclick="$('.lightpost-<?php echo $wo['story']['id'];?>').addClass('com_active');"><?php echo count($wo['story']['get_post_comments']); ?> <?php echo $wo['lang']['comments'];?></p>
+		</div>
+	</div>
+	<div class="comment-section">
+		<div class="wow_lightbox_right">
+			<?php if (Wo_IsMobile() == false) { ?>
+			<div class="comment-section-inner tag_mobi_lbox_comment-section">
+				<div class="comment-inner-middle" <?php if ($wo['loggedin'] != true) { ?>onclick="location.href= '<?php echo $wo['config']['site_url'];?>'"<?php } ?>>
+					<div class="valign tag_lbox_hdr">
+						<div class="avatar">
+							<a href="<?php echo $wo['story']['publisher']['url'];?>"><img src="<?php echo $wo['story']['publisher']['avatar'];?>"></a>
+						</div>
+						<div>
+							<h4>
+								<?php if (!isset($anonymous)) { ?>
+									<a href="<?php echo $wo['story']['publisher']['url'];?>"><?php echo $wo['story']['publisher']['name'];?></a>
+								<?php } else { ?>
+									<?php echo $wo['story']['publisher']['name'];?>
+								<?php } ?>
+							</h4>
+							<span class="ajax-time" title="<?php echo date('c',$wo['story']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['story']['time']); ?></span>
+						</div>
+					</div>
+					<div class="post-info tag_scroll">
+						<div class="post-text">
+							<p><?php echo $wo['story']['postText'];?></p>
+						</div>
+					</div>
+					<?php if (Wo_IsMobile() == false) { ?>
+					<div class="valign stats tag_post_actions">
+						<div class="valign">
+							<?php if ($wo['loggedin'] == true) { $wo['story']['viewmode'] = "lightbox";  echo Wo_LoadPage('buttons/like-wonder');}?>
+						</div>
+						<?php if ($wo['config']['second_post_button'] == 'reaction') { ?>
+							<div class="valign tag_post_foot_stats">
+								<div class="valign post-actions">
+									<div class="valign like-stat stat-item">
+										<span class="valign like-emo post-reactions-icons-<?php echo $wo['story']['id']; ?>" onclick="Wo_OpenPostReactedUsers(<?php echo $wo['story']['id']; ?>);"><?php echo Wo_GetPostReactions($wo['story']['id']);?></span>
+									</div>
+								</div>
+							</div>
+						<?php }?>
+					</div>
+					<?php }?>
+				</div>
+			</div>
+			<hr class="style-two">
+			<?php } ?>
+			<p class="bold tag_lbox_cooms_count"><button type="button" class="btn lbox_coms_navigation" onclick="$('.lightpost-<?php echo $wo['story']['id'];?>').removeClass('com_active');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" fill="currentColor"></path></svg></button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M14 22.5L11.2 19H6a1 1 0 0 1-1-1V7.103a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1V18a1 1 0 0 1-1 1h-5.2L14 22.5zm1.839-5.5H21V8.103H7V17H12.161L14 19.298 15.839 17zM2 2h17v2H3v11H1V3a1 1 0 0 1 1-1z"/></svg> <?php echo count($wo['story']['get_post_comments']); ?> <?php echo $wo['lang']['comments'];?></p>
+			<div class="comment-inner-footer lightbox-post-footer tag_scroll <?php echo ($wo['story']['comments_status'] == 0) ? 'hidden' : '';?>">
+				<div id="hidden_inputbox_comment_lighbox"></div>
+				<div class="comments-list comments-list-lightbox">
+					<div class="comment comment-container"></div>
+					<div class="comment comment-container"></div>
+					<?php 
+						foreach($wo['story']['get_post_comments'] as $wo['comment']) {
+							echo Wo_LoadPage('comment/lightbox-content');
+						}
+					?>
+					<?php if (empty($wo['story']['get_post_comments'])) { ?>
+						<div class="lightbox-no-comments">
+							<div class="empty_state">
+								<svg height="512" viewBox="0 0 32 32" width="512" xmlns="http://www.w3.org/2000/svg"><path d="m26 32h-20c-3.314 0-6-2.686-6-6v-20c0-3.314 2.686-6 6-6h20c3.314 0 6 2.686 6 6v20c0 3.314-2.686 6-6 6z" fill="#ffe6e2"/><path d="m13.667 9.833c0-.7.26-1.34.687-1.833h-4.52c-1.014 0-1.834.82-1.834 1.833v3.667c0 1.013.82 1.833 1.833 1.833h.833v1.5c0 .2.12.38.3.46.067.027.133.04.2.04.127 0 .247-.047.34-.133l2.02-1.867h.827c-.427-.493-.687-1.133-.687-1.833v-3.667z" fill="#fd907e"/><g fill="#fc573b"><circle cx="10.667" cy="19.333" r="1.333"/><path d="m11.5 21.333h-1.667c-1.011 0-1.833.823-1.833 1.834v.333c0 .276.224.5.5.5h4.333c.276 0 .5-.224.5-.5v-.333c0-1.011-.822-1.834-1.833-1.834z"/><circle cx="21.333" cy="19.333" r="1.333"/><path d="m22.167 21.333h-1.667c-1.011 0-1.833.822-1.833 1.833v.334c0 .276.224.5.5.5h4.333c.276 0 .5-.224.5-.5v-.333c0-1.011-.822-1.834-1.833-1.834z"/></g><path d="m20.833 17.333c-.123 0-.245-.046-.339-.132l-2.023-1.868h-1.971c-1.011 0-1.833-.822-1.833-1.833v-3.667c0-1.011.822-1.833 1.833-1.833h5.667c1.011 0 1.833.822 1.833 1.833v3.667c0 1.011-.822 1.833-1.833 1.833h-.833v1.5c0 .199-.118.378-.299.458-.066.029-.134.042-.202.042z" fill="#fd907e"/></svg> <?php echo $wo['lang']['no_comments_found'];?>
+							</div>
+						</div>
+					<?php } ?>
+				</div>
+			</div>
+			<div class="lightbox-post-footer post-comments <?php echo ($wo['story']['comments_status'] == 0) ? 'hidden' : '';?>" id="post-comments-<?php echo $wo['story']['id'];?>"  <?php if ($wo['loggedin'] != true) { ?>onclick="location.href= '<?php echo $wo['config']['site_url'];?>'"<?php } ?>>
+				<div class="valign tag_lbox_comcombo">
+					<img class="avatar" src="<?php echo $wo['user']['avatar'];?>"/>
+					<div class="valign">
+						<textarea rows="1" class="form-control lighbox comment-textarea textarea" onkeyup="Wo_RegisterComment(this.value,<?php echo $wo['story']['id']; ?>,<?php echo $wo['story']['publisher']['user_id']; ?>, event, <?php echo (!empty($wo['story']['publisher']['page_id'])) ? $wo['story']['publisher']['page_id'] : '0'; ?>)" onkeydown="textAreaAdjust(this, 30,'lightbox')" placeholder="<?php echo $wo['lang']['write_comment'];?>" dir="auto"></textarea>
+						<div class="valign image-comment">
+							<div class="dropup">
+								<span data-toggle="dropdown" role="button" aria-expanded="false" class="btn emo-comment dropdown-toggle" >
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.4"></circle><path fill="currentColor" d="M12,17.0918a5.67258,5.67258,0,0,1-3.64258-1.32618.99954.99954,0,1,1,1.28516-1.53124,3.76605,3.76605,0,0,0,4.71484,0,.99954.99954,0,1,1,1.28516,1.53124A5.67258,5.67258,0,0,1,12,17.0918Z"></path><circle cx="15" cy="10" r="1" fill="currentColor"></circle><circle cx="9" cy="10" r="1" fill="currentColor"></circle></svg>
+								</span>
+								<ul class="dropdown-menu dropdown-menu-right tag_scroll emo-post-container">
+									<?php  
+										foreach ($wo['emo'] as $code => $name) {
+											$code   = $code;
+											echo  '<span onclick="Wo_AddEmoToCommentInput(' . $wo["story"]["id"] . ', \'' . $code . '\', \'lightbox-post-footer\');"><i class="pointer twa-lg twa twa-' . $name . '"></i></span>'; 
+										} 
+									?>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).keydown(function(e) {
+    if (e.keyCode == 27) {
+        Wo_CloseLightbox();
+    }
+    $(".lighbox.textarea").triggeredAutocomplete({
+       hidden: '#hidden_inputbox_comment_lighbox',
+       source: Wo_Ajax_Requests_File() + "?f=mention",
+       trigger: "@" 
+    });
+});
+
+function zoomin(id){
+	var myImg = document.getElementById("wo_zoom_<?php echo $wo['story']['id'];?>");
+	$(myImg).addClass("double_zoom");
+	$('#draggableHelper').draggable({ cursor: "move", revert: true, disabled: false });
+}
+function zoomout(id){
+	var myImg = document.getElementById("wo_zoom_<?php echo $wo['story']['id'];?>");
+	$(myImg).removeClass("double_zoom");
+	$('#draggableHelper').draggable({ disabled: true, revert: true });
+}
+
+var angle = 0;
+function rotate(id){
+	angle += 90;
+	$('#wo_zoom_<?php echo $wo['story']['id'];?>').css({'transform': 'rotate(-' + angle + 'deg)'});
+	$.get(Wo_Ajax_Requests_File(), {
+		f: 'rotate_image',
+		angle: angle,
+		image: '<?php echo $wo['story']['id'];?>'
+	}, function (data) {
+		
+	});
+}
+</script>

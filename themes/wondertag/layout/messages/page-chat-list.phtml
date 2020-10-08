@@ -1,0 +1,46 @@
+<div class="message-contnaier <?php echo ($wo['message']['onwer'] == 0) ? 'pull-left' : 'pull-right';?>" id="messageId_<?php echo $wo['message']['id']; ?>">
+	<?php if ($wo['message']['onwer'] == 0): ?>
+		<?php 
+			$page_info = Wo_PageData($wo['message']['page_id']);
+			$avatar = $page_info['avatar'];
+			if ($page_info['user_id'] != $wo['message']['from_id']) {
+				$avatar = $wo['message']['user_data']['avatar'];
+			}
+		?>
+		<img class="message-user-image" src="<?php echo $avatar?>" alt="User image">
+	<?php endif ?>
+	<div class="messages-wrapper messages-text tag_msg_wrapper message-model <?php echo ($wo['message']['onwer'] == 0) ? 'incoming pull-left' : 'outgoing pull-right';?>" data-message-id="<?php echo $wo['message']['id'] ?>" onclick="Wo_ShowMessageOptions(<?php echo $wo['message']['id'] ?>);">
+		<?php if (!empty($wo['message']['text'])): ?>
+			<p class="message-text" dir="auto">
+				<?php echo $wo['message']['text'] ?>
+				<div class="deleteMessage <?php echo ($wo['message']['onwer'] == 0) ? 'right': '';?>" onclick="Wo_DeleteMessage(<?php echo $wo['message']['id'] ?>);">
+					<svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 0 24 24" width="15"><path fill="currentColor" opacity=".6" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11H8c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1z"></path></svg>
+				</div>
+			</p>
+		<?php endif ?>
+		<div class="clear"></div>
+		<div class="message-media">
+			<div class="clear"></div>
+			<?php
+				if (isset($wo['message']['media']) && !empty($wo['message']['media'])) {
+					$media = array(
+						'type' => 'message',
+						'storyId' => $wo['message']['id'],
+						'filename' => $wo['message']['media'],
+						'name' => $wo['message']['mediaFileName']
+					);
+					echo Wo_DisplaySharedFile($media, 'message');
+				}
+			?>
+			<?php if (!empty($wo['message']['stickers'])): ?>
+				<img src="<?php echo $wo['message']['stickers']; ?>" style="max-height: 100px;">
+			<?php endif; ?>
+		</div>
+		<div class="time ajax-time <?php echo ($wo['message']['onwer'] == 0) ? '' : 'text-right';?>" title="<?php echo date('c',$wo['message']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['message']['time']);?></div>
+	</div>
+
+	<?php if($wo['message']['user_data']['user_id'] == $wo['user']['user_id']) { ?>
+		<div class="message-seen"></div>
+	<?php } ?>
+</div>
+<div class="clear"></div>

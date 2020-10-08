@@ -1,0 +1,44 @@
+<div class="embed-responsive embed-responsive-16by9">
+	<div class="artplayer-app" id="video--<?php echo $wo['media']['storyId'];?>"></div>
+</div>
+
+<script>
+var art = new Artplayer({
+    container: '#video--<?php echo $wo['media']['storyId'];?>',
+    url: '<?php echo $wo['media']['filename'];?>',
+	poster: '<?php  echo $wo['media']['video_thumb'];?>',
+	volume: 1,
+	pip: true,
+	fullscreen: true,
+	miniProgressBar: true,
+	theme: '<?php echo $wo['config']['btn_background_color'];?>',
+	icons: {
+        state: '<svg class="playback-icons" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 13.5v-7c0-.41.47-.65.8-.4l4.67 3.5c.27.2.27.6 0 .8l-4.67 3.5c-.33.25-.8.01-.8-.4z"/></svg>',
+    },
+	whitelist: ['*'],
+});
+
+art.on('ready', () => {
+    $('#video--<?php echo $wo['media']['storyId'];?>').addClass('hide_control');
+	$('.art-notice, .art-contextmenus').remove();
+});
+art.on('play', () => {
+    Wo_AddVideoViews(<?php echo $wo['media']['storyId'];?>);
+	$('#video--<?php echo $wo['media']['storyId'];?> .art-mask').remove();
+	$('#video--<?php echo $wo['media']['storyId'];?>').removeClass('hide_control');
+	art.events.proxy(window, 'scroll', function (e) {
+		if (!document.pictureInPictureElement) {
+			$('#video--<?php echo $wo['media']['storyId'];?> video').each(function(){
+				if ($(this).is(":in-viewport")) {
+					
+				} else {
+					$(this)[0].pause();
+				}
+			});
+		}
+	});
+});
+art.on('pause', () => {
+    $('#video--<?php echo $wo['media']['storyId'];?>').addClass('show_control');
+});
+</script>

@@ -1,0 +1,100 @@
+<div class="container">
+	<div class="valign tag_startup">
+		<div class="wow_content p20">
+			<div class="row tag_startup_row">
+				<div class="col-lg-4 col-md-3">
+					<?php if (Wo_IsMobile() == false) { ?>
+					<div class="tag_startup_img">
+						<h2 class="text-center tag_page_title"><?php echo $wo['lang']['tell_us']; ?></h2>
+						<img src="<?php echo $wo['config']['theme_url'];?>/img/start_up/info.png" alt="<?php echo $wo['lang']['info']; ?>">
+					</div>
+					<?php } ?>
+				</div>
+				<div class="col-lg-8 col-md-9">
+					<ul class="list-unstyled tag_steps">
+						<li class="active"><div><?php echo $wo['lang']['ad_media']; ?></div></li>
+						<li class="active"><div><?php echo $wo['lang']['info']; ?></div></li>
+						<li><div><?php echo $wo['lang']['follow']; ?></div></li>
+					</ul>
+					<hr>
+					<div class="wow_usr_steps">
+						<h4 class="text-center"><?php echo $wo['lang']['tell_us_des'];?></h4>
+						<br>
+						<form class="setting-general-form form-horizontal" method="post">
+							<label class="tag_field">
+								<input name="first_name" type="text" placeholder=" " value="<?php echo $wo['user']['first_name']?>">
+								<span><?php echo $wo['lang']['first_name']; ?></span>
+							</label>
+							<label class="tag_field">
+								<input name="last_name" type="text" placeholder=" " value="<?php echo $wo['user']['last_name']?>">
+								<span><?php echo $wo['lang']['last_name']; ?></span>
+							</label>
+							<label class="tag_field">
+								<select id="country" name="country">
+									<?php 
+										foreach ($wo['countries_name'] as $country_ids => $country) { 
+										$country_id = $wo['user']['country_id'];
+										$selected_contry = ($country_ids == $country_id) ? ' selected' : '' ;
+									?>
+										<option value="<?php echo $country_ids;?>" <?php echo $selected_contry;?> ><?php echo $country;?></option>
+									<?php } ?>
+								</select>
+								<span><?php echo $wo['lang']['country']; ?></span>
+							</label>
+							<?php
+								$cutoff   = 1930;
+								$now      = date('Y');
+								$birthday = '';
+								if ($wo['user']['birthday'] != '0000-00-00') {
+									$birthday = explode('-', $wo['user']['birthday']);
+								}
+							?>
+							<label class="tag_field">
+								<input id="usr_birthday" name="birthday" type="text" placeholder=" ">
+								<span><?php echo $wo['lang']['birthday']; ?></span>
+							</label>
+							<input type="hidden" name="user_id" value="<?php echo $wo['user']['user_id'];?>">
+							<input type="hidden" name="hash_id" value="<?php echo Wo_CreateSession();?>">
+						</form>
+						<div class="clear"></div>
+					</div>
+					<div class="valign wow_usr_steps_cont">
+						<small class="skip-step pointer" onclick="Wo_SkipStep('start_up_info');"><?php echo $wo['lang']['start_up_skip'];?></small>
+						<button class="btn con-button btn-main btn-mat disable_btn" onclick="Wo_SubmitInfoForm();"><?php echo $wo['lang']['start_up_continue'];?></button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+	$("#usr_birthday").datepicker({
+		changeMonth: true,
+		changeYear: true,
+		maxDate: new Date('<?php echo date('Y')-14; ?>-12-31'),
+		dateFormat: 'dd-mm-yy',
+		yearRange: "<?php echo date('Y')-129; ?>:<?php echo date('Y')-14; ?>",
+		prevText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" /></svg>',
+		nextText: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" /></svg>'
+	});
+});
+function Wo_SubmitInfoForm() {
+	$("form.setting-general-form").submit();
+}
+$(function () {
+	$('form.setting-general-form').ajaxForm({
+		url: Wo_Ajax_Requests_File() + '?f=update_user_information_startup',
+		beforeSend: function () {
+			$('button.disable_btn').attr('disabled', true);
+			$('button.disable_btn').text("<?php echo $wo['lang']['please_wait'];?>");
+		},
+		success: function (data) {
+			if(data.status == 200) {
+				window.location.href = '<?php echo Wo_SeoLink('index.php?link1=start-up');?>';
+			}
+		}
+	});
+});
+</script>

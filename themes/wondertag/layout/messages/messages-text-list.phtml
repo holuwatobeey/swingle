@@ -1,0 +1,64 @@
+<div class="message-contnaier <?php echo ($wo['message']['onwer'] == 0) ? 'pull-left' : 'pull-right';?>" id="messageId_<?php echo $wo['message']['id']; ?>">
+	<?php if ($wo['message']['onwer'] == 0): ?>
+		<a href="<?php echo Wo_SeoLink('index.php?link1=timeline&u='.$wo['message']['messageUser']['username']);?>" data-ajax="?link1=timeline&u=<?php echo $wo['message']['messageUser']['username']?>">
+			<img class="message-user-image" src="<?php echo $wo['message']['messageUser']['avatar'] ?>" alt="Profile Picture">
+		</a>
+	<?php endif ?>
+	<div class="messages-wrapper messages-text tag_msg_wrapper message-model <?php echo ($wo['message']['onwer'] == 0) ? 'incoming pull-left' : 'outgoing pull-right';?>" data-message-id="<?php echo $wo['message']['id'] ?>" onclick="Wo_ShowMessageOptions(<?php echo $wo['message']['id'] ?>);">
+		<?php if ($wo['message']['onwer'] == 1): ?>
+			<style>.tag_msg_wrapper.outgoing .message-text::before {border-top-color: <?php echo $wo['message']['color']; ?>}</style>
+		<?php endif ?>
+		<?php if (!empty($wo['message']['text'])): ?>
+			<p class="message-text" dir="auto" style="background: <?php if ($wo['message']['onwer'] == 1) { ?><?php echo $wo['message']['color']; ?><?php } ?>;<?php echo ($wo['message']['onwer'] == 1) ? ' color:#fff !important;' : '';?>">
+				<?php echo $wo['message']['text'] ?>
+				<div class="deleteMessage <?php echo ($wo['message']['onwer'] == 0) ? 'right': '';?>" onclick="Wo_DeleteMessage(<?php echo $wo['message']['id'] ?>);">
+					<svg xmlns="http://www.w3.org/2000/svg" height="15" viewBox="0 0 24 24" width="15"><path fill="currentColor" opacity=".6" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11H8c-.55 0-1-.45-1-1s.45-1 1-1h8c.55 0 1 .45 1 1s-.45 1-1 1z"></path></svg>
+				</div>
+			</p>
+		<?php endif ?>
+		<div class="clear"></div>
+		<div class="message-media" style="background: <?php echo ($wo['message']['onwer'] == 1 && isset($wo['message']['color'])) ? $wo['message']['color'] . ' !important;' : '';?>">
+			<?php
+				if (isset($wo['message']['media']) && !empty($wo['message']['media'])) {
+					$media = array(
+						'type' => 'message',
+						'storyId' => $wo['message']['id'],
+						'filename' => $wo['message']['media'],
+						'name' => $wo['message']['mediaFileName']
+					);
+					echo Wo_DisplaySharedFile($media, 'message');
+				}
+			?>
+				<?php if (!empty($wo['message']['stickers'])): ?>
+				<?php if (strpos('.mp4', $wo['message']['stickers'])) { ?>
+					<video autoplay loop><source src="<?php echo $wo['message']['stickers']; ?>" type="video/mp4"></video>
+				<?php } else { ?>
+					<img src="<?php echo $wo['message']['stickers']; ?>" alt="GIF" style="max-height: 100px;">
+				<?php } ?>
+			<?php endif; ?>
+			
+			<?php if (!empty($wo['message']['product_id'])) { 
+				$wo['product'] = Wo_GetProduct($wo['message']['product_id']);
+				if (!empty($wo['product'])) {
+			?>
+				<div class="product tag_prods_list" id="product-<?php echo $wo['product']['id']?>" data-id="<?php echo $wo['product']['id']?>">
+					<div class="wow_content product_main">
+						<a href="<?php echo $wo['product']['url']?>" class="product_image"><img src="<?php echo $wo['product']['images'][0]['image_org'];?>"></a>
+						<div class="product_info">
+							<h2 class="truncate"><a href="<?php echo $wo['product']['url']?>" title="<?php echo $wo['product']['name']?>"><?php echo $wo['product']['name']?></a></h2>
+							<b class="truncate"><?php echo (!empty($wo['currencies'][$wo['product']['currency']]['symbol'])) ? $wo['currencies'][$wo['product']['currency']]['symbol'] : $wo['config']['classified_currency_s'];?><?php echo $wo['product']['price']?></b>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			<?php } } ?>
+		</div>
+		<div class="time ajax-time <?php echo ($wo['message']['onwer'] == 0) ? '' : 'text-right';?>" title="<?php echo date('c',$wo['message']['time']); ?>"><?php echo Wo_Time_Elapsed_String($wo['message']['time']);?></div>
+	</div>
+	
+	<div class="clear"></div>
+	<?php if($wo['message']['messageUser']['user_id'] == $wo['user']['user_id']) { ?>
+		<div class="message-seen"></div>
+	<?php } ?>
+</div>
+<div class="clear"></div>

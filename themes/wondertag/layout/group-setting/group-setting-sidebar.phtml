@@ -1,0 +1,51 @@
+<div class="valign">
+	<ul class="valign nav tag_switch_noti">
+		<?php if ($wo['setting']['user_id'] == $wo['user']['id'] || Wo_IsCanGroupUpdate($wo['setting']['id'],'general')) { ?>
+			<li class="<?php echo ($wo['setting_page'] == 'general-setting') ? 'active': '';?>">
+				<a href="<?php echo Wo_SeoLink('index.php?link1=group-setting&group=' . $wo['setting']['group_name'] . '&link3=general-setting');?>" data-ajax="?link1=group-setting&group=<?php echo $wo['setting']['group_name']?>&link3=general-setting"><?php echo $wo['lang']['general'];?>
+				</a>
+			</li>
+		<?php } ?>
+		<?php if ($wo['setting']['user_id'] == $wo['user']['id'] || Wo_IsCanGroupUpdate($wo['setting']['id'],'privacy')) { ?>
+			<li class="<?php echo ($wo['setting_page'] == 'privacy-setting') ? 'active': '';?>">
+				<a href="<?php echo Wo_SeoLink('index.php?link1=group-setting&group=' . $wo['setting']['group_name'] . '&link3=privacy-setting');?>" data-ajax="?link1=group-setting&group=<?php echo $wo['setting']['group_name']?>&link3=privacy-setting"><?php echo $wo['lang']['privacy'];?>
+				</a>
+			</li>
+		<?php } ?>
+		<?php if ($wo['setting']['user_id'] == $wo['user']['id'] || Wo_IsCanGroupUpdate($wo['setting']['id'],'avatar')) { ?>
+			<li class="<?php echo ($wo['setting_page'] == 'avatar-setting') ? 'active': '';?>">
+				<a href="<?php echo Wo_SeoLink('index.php?link1=group-setting&group=' . $wo['setting']['group_name'] . '&link3=avatar-setting');?>" data-ajax="?link1=group-setting&group=<?php echo $wo['setting']['group_name']?>&link3=avatar-setting"><?php echo $wo['lang']['design'];?>
+				</a>
+			</li>
+		<?php } ?>
+		<?php if ($wo['setting']['user_id'] == $wo['user']['id'] || Wo_IsCanGroupUpdate($wo['setting']['id'],'members')) { ?>
+			<li class="<?php echo ($wo['setting_page'] == 'group-members') ? 'active': '';?>">
+				<a href="<?php echo Wo_SeoLink('index.php?link1=group-setting&group=' . $wo['setting']['group_name'] . '&link3=group-members');?>" data-ajax="?link1=group-setting&group=<?php echo $wo['setting']['group_name']?>&link3=group-members"><?php echo $wo['lang']['members'];?>
+				</a>
+			</li>
+		<?php } ?>
+		<?php if ($wo['setting']['user_id'] == $wo['user']['id'] || Wo_IsCanGroupUpdate($wo['setting']['id'],'analytics')) { ?>
+			<li class="<?php echo ($wo['setting_page'] == 'analytics') ? 'active': '';?>">
+				<a href="<?php echo Wo_SeoLink('index.php?link1=group-setting&group=' . $wo['setting']['group_name'] . '&link3=analytics');?>"><?php echo $wo['lang']['stats'];?>
+				</a>
+			</li>
+		<?php } ?>
+		<?php if ($wo['setting']['join_privacy'] == 2) { ?>
+            <li class="<?php echo ($wo['setting_page'] == 'requests') ? 'active': '';?>">
+				<a href="<?php echo Wo_SeoLink('index.php?link1=group-setting&group=' . $wo['setting']['group_name'] . '&link3=requests');?>" data-ajax="?link1=group-setting&group=<?php echo $wo['setting']['group_name']?>&link3=requests"><?php echo $wo['lang']['requests'];?>
+					<?php 
+						$requests = Wo_CountGroupRequests($wo['setting']['id']);
+						if ($requests > 0) { ?>
+						<span class="badge bold"><?php echo $requests;?></span>
+					<?php } ?>
+				</a>
+			</li>
+		<?php } ?>
+		<?php if ($wo['setting']['user_id'] == $wo['user']['id'] || Wo_IsCanGroupUpdate($wo['setting']['id'],'delete_group')) { ?>
+			<li class="<?php echo ($wo['setting_page'] == 'delete-group') ? 'active': '';?>">
+				<a href="<?php echo Wo_SeoLink('index.php?link1=group-setting&group=' . $wo['setting']['group_name'] . '&link3=delete-group');?>" data-ajax="?link1=group-setting&group=<?php echo $wo['setting']['group_name']?>&link3=delete-group"><?php echo $wo['lang']['delete'];?>
+				</a>
+			</li>
+		<?php } ?>
+	</ul>
+</div>
