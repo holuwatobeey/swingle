@@ -8,8 +8,8 @@
 // | WoWonder - The Ultimate PHP Social Networking Platform
 // | Copyright (c) 2017 WoWonder. All rights reserved.
 // +------------------------------------------------------------------------+
-@header('Location: install');
-exit();
+// @header('Location: install');
+// exit();
 // MySQL Hostname
 $sql_db_host = "db_name";
 // MySQL Database User
